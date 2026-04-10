@@ -1,0 +1,74 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ lesson.title }} - Assessment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'exam/style.css' %}">
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark py-4">
+      <div class="container text-center">
+        <a class="navbar-brand fs-3 fw-bold mx-auto" href="/">
+          <span class="text-gradient">Antigravity</span> Exam Portal
+        </a>
+      </div>
+    </nav>
+
+    <div class="container pb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="glass-card mb-4">
+            <div class="badge-premium mb-3">Live Assessment</div>
+            <h1 class="h2 mb-2">{{ lesson.title }}</h1>
+            <p class="text-secondary mb-0">Please answer all questions carefully. Your progress will be recorded.</p>
+          </div>
+
+          <form method="post" class="glass-card">
+            {% csrf_token %}
+            
+            <div class="mb-5">
+              <label class="form-label fw-bold mb-3">Candidate Information</label>
+              <input type="text" name="student_name" class="form-control-premium w-100" placeholder="Enter your full name" required>
+            </div>
+
+            <hr class="border-secondary opacity-25 mb-5">
+
+            {% for question in questions %}
+              <div class="mb-5">
+                <h2 class="h5 mb-4 d-flex align-items-start">
+                  <span class="badge-premium me-3">{{ forloop.counter }}</span>
+                  <span>{{ question.text }}</span>
+                </h2>
+                <div class="ps-5">
+                  {% for choice in question.choices.all %}
+                    <div class="form-check mb-3 p-3 rounded-3 transition-all" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                      <input class="form-check-input ms-0 me-3" type="radio" name="question_{{ question.id }}" id="choice_{{ choice.id }}" value="{{ choice.id }}" required>
+                      <label class="form-check-label w-100" for="choice_{{ choice.id }}">
+                        {{ choice.text }}
+                      </label>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+
+            <div class="pt-4">
+              <button type="submit" class="btn-premium w-100 py-3 fs-5">Submit Assessment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-5 text-center text-secondary">
+      <div class="container">
+        <p class="small">&copy; 2026 Antigravity Online Exam System. Secure & High Performance.</p>
+      </div>
+    </footer>
+  </body>
+</html>
